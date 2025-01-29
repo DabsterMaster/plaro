@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A modern social media platform">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>PLARO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span>PLARO</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="menu-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            <div class="theme-toggle">
+                <button id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                    <span>Dark Mode</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-bar" placeholder="Search..." aria-label="Search">
+                </div>
+                <nav class="nav-icons">
+                    <button class="icon-btn" aria-label="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="icon-btn" aria-label="Messages">
+                        <i class="fas fa-envelope"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    <button class="icon-btn user-menu" aria-label="User menu">
+                        <img src="/api/placeholder/32/32" alt="Profile" class="avatar">
+                    </button>
+                </nav>
+            </header>
+
+            <!-- Post Feed -->
+            <section class="feed">
+                <div class="post-creator">
+                    <div class="post-creator-header">
+                        <img src="/api/placeholder/40/40" alt="Your avatar" class="avatar">
+                        <textarea id="postInput" placeholder="What's on your mind?" rows="3"></textarea>
+                    </div>
+                    <div class="post-creator-actions">
+                        <div class="upload-options">
+                            <label class="upload-btn" for="fileInput">
+                                <i class="fas fa-image"></i>
+                                <span>Photo</span>
+                            </label>
+                            <input type="file" id="fileInput" accept="image/*" hidden>
+                            <div id="imagePreview" class="image-preview"></div>
+                        </div>
+                        <button id="postButton" class="primary-btn">
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Post</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="postsContainer" class="posts">
+                    <!-- Posts will be dynamically added here -->
+                </div>
+
+                <div id="loadingSpinner" class="loading-spinner hidden">
+                    <div class="spinner"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Suggestions Sidebar -->
+        <aside class="suggestions">
+            <h3>Suggestions for you</h3>
+            <div class="suggestions-list">
+                <div class="suggestion-card">
+                    <img src="/api/placeholder/48/48" alt="User 1" class="avatar">
+                    <div class="suggestion-info">
+                        <h4>John Doe</h4>
+                        <p>Frontend Developer</p>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+                <div class="suggestion-card">
+                    <img src="/api/placeholder/48/48" alt="User 2" class="avatar">
+                    <div class="suggestion-info">
+                        <h4>Jane Smith</h4>
+                        <p>UI Designer</p>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+                <div class="suggestion-card">
+                    <img src="/api/placeholder/48/48" alt="User 3" class="avatar">
+                    <div class="suggestion-info">
+                        <h4>Mike Johnson</h4>
+                        <p>Product Manager</p>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+            </div>
+
+            <div class="trending-topics">
+                <h3>Trending Topics</h3>
+                <div class="topic">
+                    <span class="topic-name">#WebDevelopment</span>
+                    <span class="topic-posts">2.5K posts</span>
+                </div>
+                <div class="topic">
+                    <span class="topic-name">#JavaScript</span>
+                    <span class="topic-posts">1.8K posts</span>
+                </div>
+                <div class="topic">
+                    <span class="topic-name">#UI/UX</span>
+                    <span class="topic-posts">1.2K posts</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Toast Messages Container -->
+    <div id="toastContainer" class="toast-container"></div>
+</body>
+</html>

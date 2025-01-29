@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A modern social media platform">
+    <title>PLARO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="skip-link">
+        <a href="#main-content">Skip to main content</a>
+    </div>
+    
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar" role="navigation" aria-label="Main navigation">
+            <div class="logo">
+                <i class="fas fa-globe" aria-hidden="true"></i>
+                <span>PLARO</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="menu-item active" aria-current="page">
+                    <i class="fas fa-home" aria-hidden="true"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-cog" aria-hidden="true"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            <div class="theme-toggle">
+                <button id="themeToggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
+                    <span>Dark Mode</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            <!-- Top Navigation -->
+            <header class="top-nav">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon" aria-hidden="true"></i>
+                    <input type="text" 
+                           id="searchInput"
+                           class="search-bar" 
+                           placeholder="Search..." 
+                           aria-label="Search posts and users">
+                </div>
+                <nav class="nav-icons" aria-label="User navigation">
+                    <button class="icon-btn" aria-label="3 unread notifications">
+                        <i class="fas fa-bell" aria-hidden="true"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="icon-btn" aria-label="5 unread messages">
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    <button class="icon-btn user-menu" aria-label="User menu">
+                        <img src="/api/placeholder/32/32" alt="Your profile picture" class="avatar">
+                    </button>
+                </nav>
+            </header>
+
+            <!-- Post Feed -->
+            <section class="feed" aria-label="Post feed">
+                <div class="post-creator" role="form" aria-label="Create post">
+                    <div class="post-creator-header">
+                        <img src="/api/placeholder/40/40" alt="Your avatar" class="avatar">
+                        <textarea id="postInput" 
+                                  placeholder="What's on your mind?" 
+                                  rows="3"
+                                  aria-label="Post content"></textarea>
+                    </div>
+                    <div class="post-creator-actions">
+                        <div class="upload-options">
+                            <label class="upload-btn" for="fileInput">
+                                <i class="fas fa-image" aria-hidden="true"></i>
+                                <span>Photo</span>
+                            </label>
+                            <input type="file" 
+                                   id="fileInput" 
+                                   accept="image/*" 
+                                   hidden 
+                                   aria-label="Upload photo">
+                            
+                            <label class="upload-btn" for="videoInput">
+                                <i class="fas fa-video" aria-hidden="true"></i>
+                                <span>Video</span>
+                            </label>
+                            <input type="file" 
+                                   id="videoInput" 
+                                   accept="video/*" 
+                                   hidden 
+                                   aria-label="Upload video">
+                            
+                            <div id="mediaPreview" class="media-preview"></div>
+                        </div>
+                        <button id="postButton" class="primary-btn">
+                            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                            <span>Post</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="postsContainer" class="posts" aria-live="polite">
+                    <!-- Posts will be dynamically added here -->
+                </div>
+
+                <div id="loadingSpinner" class="loading-spinner hidden" aria-hidden="true">
+                    <div class="spinner"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Suggestions Sidebar -->
+        <aside class="suggestions" aria-label="Suggestions">
+            <h3>Suggestions for you</h3>
+            <div class="suggestions-list">
+                <div class="suggestion-card">
+                    <img src="/api/placeholder/48/48" alt="John Doe's profile picture" class="avatar">
+                    <div class="suggestion-info">
+                        <h4>John Doe</h4>
+                        <p>Frontend Developer</p>
+                    </div>
+                    <button class="follow-btn" aria-label="Follow John Doe">Follow</button>
+                </div>
+                <div class="suggestion-card">
+                    <img src="/api/placeholder/48/48" alt="Jane Smith's profile picture" class="avatar">
+                    <div class="suggestion-info">
+                        <h4>Jane Smith</h4>
+                        <p>UI Designer</p>
+                    </div>
+                    <button class="follow-btn" aria-label="Follow Jane Smith">Follow</button>
+                </div>
+                <div class="suggestion-card">
+                    <img src="/api/placeholder/48/48" alt="Mike Johnson's profile picture" class="avatar">
+                    <div class="suggestion-info">
+                        <h4>Mike Johnson</h4>
+                        <p>Product Manager</p>
+                    </div>
+                    <button class="follow-btn" aria-label="Follow Mike Johnson">Follow</button>
+                </div>
+            </div>
+
+            <div class="trending-topics" aria-label="Trending topics">
+                <h3>Trending Topics</h3>
+                <div class="topic">
+                    <span class="topic-name">#WebDevelopment</span>
+                    <span class="topic-posts">2.5K posts</span>
+                </div>
+                <div class="topic">
+                    <span class="topic-name">#JavaScript</span>
+                    <span class="topic-posts">1.8K posts</span>
+                </div>
+                <div class="topic">
+                    <span class="topic-name">#UI/UX</span>
+                    <span class="topic-posts">1.2K posts</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Toast Messages Container -->
+    <div id="toastContainer" class="toast-container" role="alert" aria-live="polite"></div>
+</body>
+</html>
