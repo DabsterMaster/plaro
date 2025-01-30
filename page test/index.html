@@ -10,152 +10,171 @@
     <script defer src="script.js"></script>
 </head>
 <body>
-    <div class="skip-link">
-        <a href="#main-content">Skip to main content</a>
-    </div>
-    
     <div class="container">
         <!-- Sidebar -->
-        <aside class="sidebar" role="navigation" aria-label="Main navigation">
+        <aside class="sidebar">
             <div class="logo">
-                <i class="fas fa-globe" aria-hidden="true"></i>
                 <span>PLARO</span>
             </div>
             <nav class="sidebar-nav">
-                <a href="#" class="menu-item active" aria-current="page">
-                    <i class="fas fa-home" aria-hidden="true"></i>
+                <a href="#" class="menu-item active" data-page="home">
+                    <i class="fas fa-home"></i>
                     <span>Home</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-user" aria-hidden="true"></i>
+                <a href="#" class="menu-item" data-page="profile">
+                    <i class="fas fa-user"></i>
                     <span>Profile</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                <a href="#" class="menu-item" data-page="messages">
+                    <i class="fas fa-envelope"></i>
                     <span>Messages</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-cog" aria-hidden="true"></i>
+                <a href="#" class="menu-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </a>
             </nav>
             <div class="theme-toggle">
-                <button id="themeToggle" aria-label="Toggle dark mode">
-                    <i class="fas fa-moon" aria-hidden="true"></i>
+                <button id="themeToggle">
+                    <i class="fas fa-moon"></i>
                     <span>Dark Mode</span>
                 </button>
             </div>
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content" id="main-content">
+        <main class="main-content">
             <!-- Top Navigation -->
             <header class="top-nav">
                 <div class="search-container">
-                    <i class="fas fa-search search-icon" aria-hidden="true"></i>
-                    <input type="text" 
-                           id="searchInput"
-                           class="search-bar" 
-                           placeholder="Search..." 
-                           aria-label="Search posts and users">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-bar" placeholder="Search..." aria-label="Search">
                 </div>
-                <nav class="nav-icons" aria-label="User navigation">
-                    <button class="icon-btn" aria-label="3 unread notifications">
-                        <i class="fas fa-bell" aria-hidden="true"></i>
+                <nav class="nav-icons">
+                    <button class="icon-btn" aria-label="Notifications" id="notificationsBtn">
+                        <i class="fas fa-bell"></i>
                         <span class="notification-badge">3</span>
                     </button>
-                    <button class="icon-btn" aria-label="5 unread messages">
-                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                    <button class="icon-btn" aria-label="Messages" id="messagesBtn">
+                        <i class="fas fa-envelope"></i>
                         <span class="notification-badge">5</span>
                     </button>
                     <button class="icon-btn user-menu" aria-label="User menu">
-                        <img src="/api/placeholder/32/32" alt="Your profile picture" class="avatar">
+                        <img src="/api/placeholder/32/32" alt="Profile" class="avatar" id="profilePic">
                     </button>
                 </nav>
             </header>
 
-            <!-- Post Feed -->
-            <section class="feed" aria-label="Post feed">
-                <div class="post-creator" role="form" aria-label="Create post">
+            <!-- Dynamic Content Sections -->
+            <section id="home" class="feed active">
+                <div class="post-creator">
                     <div class="post-creator-header">
-                        <img src="/api/placeholder/40/40" alt="Your avatar" class="avatar">
-                        <textarea id="postInput" 
-                                  placeholder="What's on your mind?" 
-                                  rows="3"
-                                  aria-label="Post content"></textarea>
+                        <img src="/api/placeholder/40/40" alt="Your avatar" class="avatar" id="homeProfilePic">
+                        <textarea id="postInput" placeholder="What's on your mind?" rows="3"></textarea>
                     </div>
                     <div class="post-creator-actions">
                         <div class="upload-options">
                             <label class="upload-btn" for="fileInput">
-                                <i class="fas fa-image" aria-hidden="true"></i>
+                                <i class="fas fa-image"></i>
                                 <span>Photo</span>
                             </label>
-                            <input type="file" 
-                                   id="fileInput" 
-                                   accept="image/*" 
-                                   hidden 
-                                   aria-label="Upload photo">
-                            
-                            <label class="upload-btn" for="videoInput">
-                                <i class="fas fa-video" aria-hidden="true"></i>
-                                <span>Video</span>
-                            </label>
-                            <input type="file" 
-                                   id="videoInput" 
-                                   accept="video/*" 
-                                   hidden 
-                                   aria-label="Upload video">
-                            
-                            <div id="mediaPreview" class="media-preview"></div>
+                            <input type="file" id="fileInput" accept="image/*" hidden>
+                            <div id="imagePreview" class="image-preview"></div>
                         </div>
                         <button id="postButton" class="primary-btn">
-                            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                            <i class="fas fa-paper-plane"></i>
                             <span>Post</span>
                         </button>
                     </div>
                 </div>
 
-                <div id="postsContainer" class="posts" aria-live="polite">
+                <div id="postsContainer" class="posts">
                     <!-- Posts will be dynamically added here -->
                 </div>
 
-                <div id="loadingSpinner" class="loading-spinner hidden" aria-hidden="true">
+                <div id="loadingSpinner" class="loading-spinner hidden">
                     <div class="spinner"></div>
+                </div>
+            </section>
+
+            <!-- Profile Page -->
+            <section id="profile" class="feed hidden">
+                <div class="profile-header">
+                    <img src="/api/placeholder/100/100" alt="Profile Picture" class="profile-pic" id="profilePicture">
+                    <div class="profile-info">
+                        <h2 id="profileName">John Doe</h2>
+                        <p id="profileBio">Frontend Developer</p>
+                    </div>
+                    <button class="primary-btn" id="editProfileBtn">Edit Profile</button>
+                </div>
+                <div class="profile-content">
+                    <h3>Your Posts</h3>
+                    <div id="profilePosts" class="posts">
+                        <!-- Profile posts will be dynamically added here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Messages Page -->
+            <section id="messages" class="feed hidden">
+                <div class="messages-header">
+                    <h2>Messages</h2>
+                </div>
+                <div class="messages-list">
+                    <!-- Messages will be dynamically added here -->
+                </div>
+            </section>
+
+            <!-- Settings Page -->
+            <section id="settings" class="feed hidden">
+                <div class="settings-header">
+                    <h2>Settings</h2>
+                </div>
+                <div class="settings-content">
+                    <form id="settingsForm">
+                        <label for="profileNameInput">Name:</label>
+                        <input type="text" id="profileNameInput" name="profileName">
+                        <label for="profileBioInput">Bio:</label>
+                        <textarea id="profileBioInput" name="profileBio"></textarea>
+                        <label for="profilePicInput">Profile Picture:</label>
+                        <input type="file" id="profilePicInput" accept="image/*">
+                        <button type="submit" class="primary-btn">Save Changes</button>
+                    </form>
                 </div>
             </section>
         </main>
 
         <!-- Suggestions Sidebar -->
-        <aside class="suggestions" aria-label="Suggestions">
+        <aside class="suggestions">
             <h3>Suggestions for you</h3>
             <div class="suggestions-list">
                 <div class="suggestion-card">
-                    <img src="/api/placeholder/48/48" alt="John Doe's profile picture" class="avatar">
+                    <img src="/api/placeholder/48/48" alt="User 1" class="avatar">
                     <div class="suggestion-info">
                         <h4>John Doe</h4>
                         <p>Frontend Developer</p>
                     </div>
-                    <button class="follow-btn" aria-label="Follow John Doe">Follow</button>
+                    <button class="follow-btn">Follow</button>
                 </div>
                 <div class="suggestion-card">
-                    <img src="/api/placeholder/48/48" alt="Jane Smith's profile picture" class="avatar">
+                    <img src="/api/placeholder/48/48" alt="User 2" class="avatar">
                     <div class="suggestion-info">
                         <h4>Jane Smith</h4>
                         <p>UI Designer</p>
                     </div>
-                    <button class="follow-btn" aria-label="Follow Jane Smith">Follow</button>
+                    <button class="follow-btn">Follow</button>
                 </div>
                 <div class="suggestion-card">
-                    <img src="/api/placeholder/48/48" alt="Mike Johnson's profile picture" class="avatar">
+                    <img src="/api/placeholder/48/48" alt="User 3" class="avatar">
                     <div class="suggestion-info">
                         <h4>Mike Johnson</h4>
                         <p>Product Manager</p>
                     </div>
-                    <button class="follow-btn" aria-label="Follow Mike Johnson">Follow</button>
+                    <button class="follow-btn">Follow</button>
                 </div>
             </div>
 
-            <div class="trending-topics" aria-label="Trending topics">
+            <div class="trending-topics">
                 <h3>Trending Topics</h3>
                 <div class="topic">
                     <span class="topic-name">#WebDevelopment</span>
@@ -174,6 +193,28 @@
     </div>
 
     <!-- Toast Messages Container -->
-    <div id="toastContainer" class="toast-container" role="alert" aria-live="polite"></div>
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Notification Pop-up -->
+    <div id="notificationPopup" class="popup hidden">
+        <div class="popup-header">
+            <h3>Notifications</h3>
+            <button class="close-btn" id="closeNotificationPopup">&times;</button>
+        </div>
+        <div class="popup-content">
+            <!-- Notifications will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Message Indication Pop-up -->
+    <div id="messagePopup" class="popup hidden">
+        <div class="popup-header">
+            <h3>New Messages</h3>
+            <button class="close-btn" id="closeMessagePopup">&times;</button>
+        </div>
+        <div class="popup-content">
+            <!-- Messages will be dynamically added here -->
+        </div>
+    </div>
 </body>
 </html>

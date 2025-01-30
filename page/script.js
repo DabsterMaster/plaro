@@ -276,3 +276,68 @@ async function initializeApp() {
 
 // Start the application
 document.addEventListener('DOMContentLoaded', initializeApp);
+// Add these functions to the existing script.js file
+
+// Profile Picture Management
+let profilePicture = localStorage.getItem('profilePicture') || '/api/placeholder/32/32';
+
+function updateProfilePicture(src) {
+    profilePicture = src;
+    localStorage.setItem('profilePicture', src);
+    document.getElementById('profilePic').src = src;
+    document.getElementById('homeProfilePic').src = src;
+    document.getElementById('profilePicture').src = src;
+}
+
+// Profile Page
+document.getElementById('profilePicInput').addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            updateProfilePicture(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Settings Form Submission
+document.getElementById('settingsForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const name = document.getElementById('profileNameInput').value;
+    const bio = document.getElementById('profileBioInput').value;
+    localStorage.setItem('profileName', name);
+    localStorage.setItem('profileBio', bio);
+    document.getElementById('profileName').textContent = name;
+    document.getElementById('profileBio').textContent = bio;
+    ToastManager.show('Profile updated successfully');
+});
+
+// Navigation Between Pages
+document.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', function () {
+        const page = this.getAttribute('data-page');
+        document.querySelectorAll('.feed').forEach(section => {
+            section.classList.add('hidden');
+        });
+        document.getElementById(page).classList.remove('hidden');
+    });
+});
+
+// Notification Pop-up
+document.getElementById('notificationsBtn').addEventListener('click', function () {
+    document.getElementById('notificationPopup').classList.remove('hidden');
+});
+
+document.getElementById('closeNotificationPopup').addEventListener('click', function () {
+    document.getElementById('notificationPopup').classList.add('hidden');
+});
+
+// Message Indication Pop-up
+document.getElementById('messagesBtn').addEventListener('click', function () {
+    document.getElementById('messagePopup').classList.remove('hidden');
+});
+
+document.getElementById('closeMessagePopup').addEventListener('click', function () {
+    document.getElementById('messagePopup').classList.add('hidden');
+});

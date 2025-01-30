@@ -1,5 +1,7 @@
+// script.js
+import PostManager from './firebase-post-manager.js';
+
 // Constants
-const STORAGE_KEY = 'social_media_posts';
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 // DOM Elements
@@ -16,10 +18,12 @@ const elements = {
 
 // State Management
 let state = {
-    posts: [],
     darkMode: localStorage.getItem('darkMode') === 'true',
     isLoading: false
 };
+
+// Initialize PostManager
+const postManager = new PostManager();
 
 // Theme Management
 class ThemeManager {
@@ -62,144 +66,45 @@ class ToastManager {
     }
 }
 
-// Post Management
-class PostManager {
-    static async loadPosts() {
+// Event Listeners
+async function initializeEventListeners() {
+    elements.postButton.addEventListener('click', async () => {
+        const content = elements.postInput.value.trim();
+        const imagePreview = elements.imagePreview.querySelector('img');
+        const image = imagePreview ? imagePreview.src : null;
+
+        if (!content && !image) {
+            ToastManager.show('Please add some content to your post', 'error');
+            return;
+        }
+
         try {
             state.isLoading = true;
             elements.loadingSpinner.classList.remove('hidden');
+            elements.postButton.disabled = true;
+
+            await postManager.createPost(content, image);
             
-            const savedPosts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            state.posts = savedPosts;
+            elements.postInput.value = '';
+            FileHandler.removePreview();
+            ToastManager.show('Post created successfully');
             
-            await this.renderPosts();
-            
-            ToastManager.show('Posts loaded successfully');
+            await loadAndRenderPosts();
         } catch (error) {
-            console.error('Error loading posts:', error);
-            ToastManager.show('Error loading posts', 'error');
+            ToastManager.show(error.message, 'error');
         } finally {
             state.isLoading = false;
             elements.loadingSpinner.classList.add('hidden');
+            elements.postButton.disabled = false;
         }
-    }
+    });
 
-    static async savePost(content, image) {
-        try {
-            const newPost = {
-                id: Date.now(),
-                content,
-                image,
-                timestamp: new Date().toISOString(),
-                likes: 0,
-                comments: [],
-                isLiked: false
-            };
+    elements.fileInput.addEventListener('change', FileHandler.handleFileSelect);
 
-            state.posts.unshift(newPost);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state.posts));
-            
-            await this.renderPosts();
-            ToastManager.show('Post created successfully');
-            
-            return true;
-        } catch (error) {
-            console.error('Error saving post:', error);
-            ToastManager.show('Error creating post', 'error');
-            return false;
-        }
-    }
-
-    static async deletePost(postId) {
-        try {
-            state.posts = state.posts.filter(post => post.id !== postId);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state.posts));
-            
-            await this.renderPosts();
-            ToastManager.show('Post deleted successfully');
-        } catch (error) {
-            console.error('Error deleting post:', error);
-            ToastManager.show('Error deleting post', 'error');
-        }
-    }
-
-    static toggleLike(postId) {
-        const post = state.posts.find(p => p.id === postId);
-        if (post) {
-            post.isLiked = !post.isLiked;
-            post.likes += post.isLiked ? 1 : -1;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state.posts));
-            this.renderPosts();
-        }
-    }
-
-    static async renderPosts() {
-        elements.postsContainer.innerHTML = '';
-        
-        state.posts.forEach(post => {
-            const postElement = document.createElement('div');
-            postElement.className = 'post';
-            postElement.innerHTML = `
-                <div class="post-header">
-                    <img src="/api/placeholder/40/40" alt="User Avatar" class="avatar">
-                    <div class="post-author-info">
-                        <div class="post-author">John Doe</div>
-                        <div class="post-timestamp">${this.formatTimestamp(post.timestamp)}</div>
-                    </div>
-                </div>
-                <div class="post-content">
-                    ${post.content}
-                    ${post.image ? `
-                        <div class="post-media">
-                            <img src="${post.image}" alt="Post image">
-                        </div>
-                    ` : ''}
-                </div>
-                <div class="post-actions">
-                    <div class="action-buttons">
-                        <button class="action-btn ${post.isLiked ? 'liked' : ''}" 
-                                onclick="PostManager.toggleLike(${post.id})">
-                            <i class="fas fa-heart"></i>
-                            <span>${post.likes} ${post.likes === 1 ? 'Like' : 'Likes'}</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-comment"></i>
-                            <span>${post.comments.length} Comments</span>
-                        </button>
-                        <button class="action-btn">
-                            <i class="fas fa-share"></i>
-                            <span>Share</span>
-                        </button>
-                    </div>
-                    <button class="delete-btn" onclick="PostManager.deletePost(${post.id})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
-            
-            elements.postsContainer.appendChild(postElement);
-        });
-    }
-
-    static formatTimestamp(timestamp) {
-        const date = new Date(timestamp);
-        const now = new Date();
-        const diff = now - date;
-        
-        const minutes = Math.floor(diff / 60000);
-        const hours = Math.floor(diff / 3600000);
-        const days = Math.floor(diff / 86400000);
-        
-        if (minutes < 60) {
-            return `${minutes} minutes ago`;
-        } else if (hours < 24) {
-            return `${hours} hours ago`;
-        } else if (days < 7) {
-            return `${days} days ago`;
-        } else {
-            return date.toLocaleDateString();
-        }
-    }
+    elements.postInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
+    });
 }
 
 // File Handling
@@ -239,39 +144,96 @@ class FileHandler {
     }
 }
 
-// Event Listeners
-function initializeEventListeners() {
-    elements.postButton.addEventListener('click', async () => {
-        const content = elements.postInput.value.trim();
-        const imagePreview = elements.imagePreview.querySelector('img');
-        const image = imagePreview ? imagePreview.src : null;
+// Post Rendering
+async function loadAndRenderPosts() {
+    try {
+        state.isLoading = true;
+        elements.loadingSpinner.classList.remove('hidden');
+        elements.postsContainer.innerHTML = '';
 
-        if (!content && !image) {
-            ToastManager.show('Please add some content to your post', 'error');
-            return;
-        }
-
-        const success = await PostManager.savePost(content, image);
-        if (success) {
-            elements.postInput.value = '';
-            FileHandler.removePreview();
-        }
-    });
-
-    elements.fileInput.addEventListener('change', FileHandler.handleFileSelect);
-
-    // Handle post input auto-resize
-    elements.postInput.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = this.scrollHeight + 'px';
-    });
+        const posts = await postManager.loadPosts();
+        
+        posts.forEach(post => {
+            const postElement = document.createElement('div');
+            postElement.className = 'post';
+            postElement.innerHTML = `
+                <div class="post-header">
+                    <img src="/api/placeholder/40/40" alt="User Avatar" class="avatar">
+                    <div class="post-author-info">
+                        <div class="post-author">${post.authorName}</div>
+                        <div class="post-timestamp">${postManager.formatTimestamp(post.timestamp)}</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    ${post.content}
+                    ${post.image ? `
+                        <div class="post-media">
+                            <img src="${post.image}" alt="Post image">
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="post-actions">
+                    <div class="action-buttons">
+                        <button class="action-btn ${post.isLiked ? 'liked' : ''}" 
+                                onclick="handleLikeClick('${post.id}')">
+                            <i class="fas fa-heart"></i>
+                            <span>${post.likes} ${post.likes === 1 ? 'Like' : 'Likes'}</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-comment"></i>
+                            <span>${post.comments.length} Comments</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-share"></i>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                    <button class="delete-btn" onclick="handleDeleteClick('${post.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            elements.postsContainer.appendChild(postElement);
+        });
+    } catch (error) {
+        ToastManager.show(error.message, 'error');
+    } finally {
+        state.isLoading = false;
+        elements.loadingSpinner.classList.add('hidden');
+    }
 }
+
+// Handle post actions
+async function handleLikeClick(postId) {
+    try {
+        const isLiked = await postManager.toggleLike(postId);
+        await loadAndRenderPosts();
+        ToastManager.show(isLiked ? 'Post liked!' : 'Post unliked!');
+    } catch (error) {
+        ToastManager.show(error.message, 'error');
+    }
+}
+
+async function handleDeleteClick(postId) {
+    try {
+        await postManager.deletePost(postId);
+        await loadAndRenderPosts();
+        ToastManager.show('Post deleted successfully');
+    } catch (error) {
+        ToastManager.show(error.message, 'error');
+    }
+}
+
+// Make functions available globally
+window.handleLikeClick = handleLikeClick;
+window.handleDeleteClick = handleDeleteClick;
 
 // Initialize Application
 async function initializeApp() {
     ThemeManager.init();
-    initializeEventListeners();
-    await PostManager.loadPosts();
+    await initializeEventListeners();
+    await loadAndRenderPosts();
 }
 
 // Start the application
